@@ -1,7 +1,22 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
+  height: 100%;
+  width: 100%;
   background-color: #fff;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   /* leave it to hide the scrollbars */
   overflow: hidden;
+}
+
+canvas {
+  display: block;
+  margin: auto;
 }
