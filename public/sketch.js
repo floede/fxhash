@@ -1,4 +1,4 @@
-let w, h;
+let w, h, bgColor;
 const aspect = 16 / 9;
 const grid = [];
 const listHexSizes = [1, 2, 4, 5, 10, 20];
@@ -26,12 +26,14 @@ function setup(params) {
       : 0.5 * (h - horizontalHexes * HexSize);
 
   if (fxrand() < 0.5) {
-    background(20);
+    bgColor = 20;
   } else {
-    background(240);
+    bgColor = 240;
   }
   colorMode(HSB);
   palettePick = Math.floor(colors.length * fxrand());
+  bgColor = colors[palettePick][0].hsb;
+  background(bgColor);
   noStroke();
   for (let j = 0; j < 1 + h / HexSize; j++) {
     let row = [];
@@ -73,6 +75,13 @@ function draw(params) {
       pop();
     }
   }
+  strokeWeight(80);
+  stroke(bgColor);
+  noFill();
+  rect(0, 0, width, height);
+  /*   strokeWeight(3);
+  stroke(20);
+  rect(20, 20, width - 40, height - 40); */
   noLoop();
   fxpreview();
 }
