@@ -2,7 +2,7 @@ let w, h, bgColor;
 const aspect = 16 / 9;
 const grid = [];
 const listHexSizes = [1, 2, 4, 5, 10, 20];
-const noOfHex = 5; // listHexSizes[Math.floor(fxrand() * listHexSizes.length)];
+const noOfHex = listHexSizes[Math.floor(fxrand() * listHexSizes.length)];
 
 const margin = false;
 const border = 50;
@@ -26,26 +26,28 @@ function setup(params) {
   let horizontalHexes = Math.floor(h / HexSize);
   padding =
     horizontalHexes === 1
-      ? -(1 / 9) * HexSize
+      ? h / 2 - HexSize
       : 0.5 * (h - horizontalHexes * HexSize);
 
-  if (fxrand() < 0.5) {
-    bgColor = 20;
-  } else {
-    bgColor = 240;
-  }
+  /*   console.table({
+    "Hoz hexes": horizontalHexes,
+    "Hex size:": HexSize,
+    "Hex side": HexSide,
+    Padding: padding,
+  }); */
+
   colorMode(HSB);
   palettePick = Math.floor(colors.length * fxrand());
   bgColor = colors[palettePick][0].hsb;
   background(bgColor);
   noStroke();
-  for (let j = 0; j < h / HexSize; j++) {
+  for (let j = 0; j < 1 + h / HexSize; j++) {
     let row = [];
     for (let index = 0; index <= noOfHex; index++) {
       if (j % 2 === 0) {
-        row[index] = [border + 0.5 * HexSize + index * HexSize, j * HexSize];
-      } else {
         row[index] = [border + index * HexSize, j * HexSize];
+      } else {
+        row[index] = [border + 0.5 * HexSize + index * HexSize, j * HexSize];
       }
     }
     grid[j] = row;
@@ -62,6 +64,9 @@ function draw(params) {
         if ((margin && j === 0) || (margin && j === grid.length - 1)) {
           break;
         }
+      }
+      if (noOfHex === 1 && j === 1 && index === 1) {
+        break;
       }
       push();
       translate(x, y);
@@ -80,20 +85,23 @@ function draw(params) {
       pop();
     }
   }
-  /*   
-  strokeWeight(border);
+
+  strokeWeight(2 * border + 2);
   stroke(bgColor);
   noFill();
   rect(0, 0, width, height);
-  strokeWeight(3);
+  /*   strokeWeight(3);
   stroke(20);
-  rect(20, 20, width - 40, height - 40); */
+  rect(20, 20, width - 40, height - 40);
   stroke(100);
   strokeWeight(2);
+  line(0, height / 2, width, height / 2);
+  line(0, HexSize / 2, width, HexSize / 2);
+  line(0, height - HexSize / 2, width, height - HexSize / 2);
   line(border, 0, border, height);
   line(width - border, 0, width - border, height);
   line(0, border, width, border);
-  line(0, height - border, width, height - border);
+  line(0, height - border, width, height - border);*/
   noLoop();
   fxpreview();
 }
