@@ -1,11 +1,10 @@
-let w, h, bgColor;
+let w, h, bgColor, border;
 const aspect = 16 / 9;
 const grid = [];
 const listHexSizes = [1, 2, 4, 5, 10, 20];
 const noOfHex = listHexSizes[Math.floor(fxrand() * listHexSizes.length)];
 
 const margin = false;
-const border = 50;
 
 let HexSize, HexSide, padding;
 
@@ -18,8 +17,10 @@ function setup(params) {
   h = min(aspect * windowWidth, windowHeight);
   w = h / aspect;
 
+  pixelDensity(1);
   c = createCanvas(w, h, WEBGL);
 
+  border = w / 20;
   HexSize = (w - 2 * border) / noOfHex;
   HexSide = Math.ceil(HexSize / Math.sqrt(3));
 
@@ -101,7 +102,8 @@ function draw(params) {
   line(border, 0, border, height);
   line(width - border, 0, width - border, height);
   line(0, border, width, border);
-  line(0, height - border, width, height - border);*/
+  line(0, height - border, width, height - border);
+  */
   noLoop();
   fxpreview();
 }
