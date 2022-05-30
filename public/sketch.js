@@ -214,8 +214,8 @@ class SmallCircle {
       }
       strokeWeight(0.05 * gridSpacingX);
       // ellipse(0, 0, gridSpacingX / 2, gridSpacingX / 2);
-      // ellipse(0, 0, gridSpacingX / golden, gridSpacingX / golden);
-      ellipse(0, 0, gridSpacingX * smallGold, gridSpacingX * smallGold);
+      ellipse(0, 0, gridSpacingX / golden, gridSpacingX / golden);
+      //ellipse(0, 0, gridSpacingX * smallGold, gridSpacingX * smallGold);
     }
   }
 }
@@ -260,7 +260,7 @@ const noiseField = (noiseType, element) => {
     for (let x = 0; x < element.width; x++) {
       for (let y = 0; y < element.height; y++) {
         let index = (x + y * width) * 4;
-        var r = random(20, 235);
+        var r = 20 + fxrand() * 215; //random(20, 235);
         element.pixels[index + 0] = r;
         element.pixels[index + 1] = r;
         element.pixels[index + 2] = r;
