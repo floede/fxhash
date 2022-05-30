@@ -1,7 +1,7 @@
 let w, h, bgColor, border;
 const aspect = 16 / 9;
 const grid = [];
-const listHexSizes = [1, 2, 4, 5, 10, 20];
+const listHexSizes = [1, 2, 3, 4, 6, 9, 18];
 const noOfHex = listHexSizes[Math.floor(fxrand() * listHexSizes.length)];
 
 const margin = false;
@@ -11,24 +11,27 @@ let HexSize, HexSide, padding;
 let palettePick;
 
 function setup(params) {
-  //w = 1000;
-  //h = w * aspect;
+  w = 1000;
+  h = w * aspect;
 
-  h = min(aspect * windowWidth, windowHeight);
-  w = h / aspect;
+  //wh = min(aspect * windowWidth, windowHeight);
+  //h = min(1000 * aspect, wh);
+  //w = h / aspect;
 
   pixelDensity(1);
-  c = createCanvas(w, h, WEBGL);
+  c = createCanvas(w, h);
 
-  border = w / 20;
-  HexSize = (w - 2 * border) / noOfHex;
+  border = ceil(w / 20);
+  HexSize = ceil((w - 2 * border) / noOfHex);
   HexSide = Math.ceil(HexSize / Math.sqrt(3));
+
+  console.log("SIDE:", HexSide, HexSize);
 
   let horizontalHexes = Math.floor(h / HexSize);
   padding =
     horizontalHexes === 1
-      ? h / 2 - HexSize
-      : 0.5 * (h - horizontalHexes * HexSize);
+      ? ceil(h / 2 - HexSize)
+      : ceil(0.5 * (h - horizontalHexes * HexSize));
 
   /*   console.table({
     "Hoz hexes": horizontalHexes,
@@ -56,7 +59,7 @@ function setup(params) {
 }
 
 function draw(params) {
-  translate(-width / 2, -height / 2);
+  //translate(-width / 2, -height / 2);
   for (let j = 0; j < grid.length; j++) {
     for (let index = 0; index < grid[j].length; index++) {
       let x = grid[j][index][0];
@@ -70,7 +73,7 @@ function draw(params) {
         break;
       }
       push();
-      translate(x, y);
+      translate(ceil(x), ceil(y));
       rotate(30 * (PI / 180));
       drawHalfHex(0, 0, HexSide, pickColorScheme(), x);
       rotate(PI);
@@ -116,7 +119,7 @@ function pickColorScheme() {
 }
 
 function drawHalfHex(x, y, len, col, realX) {
-  let gs = 0.5 * len;
+  let gs = ceil(0.5 * len);
   if (col.length === 1) {
     let hue = map(realX, 0, w, 0, 360);
     fill(hue, 40 + len - 20 * fxrand(), 100 - 20 * fxrand());
