@@ -1,3 +1,26 @@
+paletteNames = [
+  "Miami Night",
+  "Pastels",
+  "Delicate",
+  "Polos and sneakers",
+  "Toast",
+  "Tracksuit",
+  "The beach",
+  "The greys",
+  "Dark pink",
+  "Seeing red",
+  "Hope",
+  "Earth tones",
+  "Roses",
+  "Clouds on a summer sky",
+  "Red & Black",
+  "Honey on porcelain",
+  "Drops of purple",
+  "Blue & Yellow",
+  "Pink delight",
+  "Daisies",
+];
+
 colors = [
   [
     {

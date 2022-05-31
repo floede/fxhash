@@ -10,29 +10,31 @@ const golden = (1 + Math.sqrt(5)) / 2;
 const smallGold = -golden + 2;
 
 let bools = [];
-let paletteNum, palette, occurence, gravity;
+let paletteNum, palette;
 
-if (gravityRoll < 30) {
-  gravity = "center";
-} else if (gravityRoll >= 30 && gravityRoll < 47.5) {
-  gravity = "vertical";
-} else if (gravityRoll >= 47.5 && gravityRoll < 70) {
-  gravity = "horizontal";
-} else if (gravityRoll >= 70 && gravityRoll < 87.5) {
-  gravity = "tl2br";
-} else if (gravityRoll >= 87.5 && gravityRoll < 100) {
-  gravity = "tr2bl";
-}
+const gravity = function () {
+  if (gravityRoll < 30) {
+    return "center";
+  } else if (gravityRoll < 47.5) {
+    return "vertical";
+  } else if (gravityRoll < 70) {
+    return "horizontal";
+  } else if (gravityRoll < 87.5) {
+    return "tl2br";
+  } else return "tr2bl";
+};
 
-if (occurenceRoll <= 5) {
-  occurence = "always";
-} else if (55 > occurenceRoll && occurenceRoll > 5) {
-  occurence = "mapped";
-} else {
-  occurence = "random";
-}
+const occurence = () => {
+  if (occurenceRoll <= 5) {
+    return "always";
+  } else if (occurenceRoll < 55) {
+    return "mapped";
+  } else {
+    return "random";
+  }
+};
 
-if (occurence === "random") {
+if (occurence() === "random") {
   centered = true;
 }
 
@@ -82,7 +84,7 @@ function draw() {
       let scaledX = padding + 0.5 * gridSpacingX + x * gridSpacingX;
       let scaledY = padding + 0.5 * gridSpacingY + y * gridSpacingY;
 
-      findDistances(distances, scaledX, scaledY, gravity);
+      findDistances(distances, scaledX, scaledY, gravity());
 
       push();
       translate(scaledX, scaledY);
@@ -91,7 +93,7 @@ function draw() {
 
       let showBig, showSmall;
 
-      if (occurence === "mapped") {
+      if (occurence() === "mapped") {
         let percentage = (distances.d / distances.max) * 100;
         showBig = centered
           ? rollBig > 25 + percentage
@@ -99,7 +101,7 @@ function draw() {
         showSmall = centered
           ? rollSmall > 15 + percentage
           : rollSmall < 5 + percentage;
-      } else if (occurence === "random") {
+      } else if (occurence() === "random") {
         showBig = fxrand() > 0.55;
         showSmall = fxrand() > 0.65;
       } else {
@@ -148,14 +150,14 @@ function draw() {
   line(0, padding, height, padding);
   line(0, height - padding, width, height - padding); */
   noLoop();
-  //saveCanvas(c, `Flowers - ${smallGold} - ${Date.now()}`, "png");
+  //saveCanvas(c, `Flowers - ${paletteNames[paletteNum]} - ${Date.now()}`, "png");
   console.table({
-    "Occurence:": occurence,
+    "Occurence:": occurence(),
     "Centered:": centered,
-    "Gravity:": gravity,
+    "Gravity:": gravity(),
     "Mapped Shape:": mappedShape,
     "Mapped Color:": mappedCol,
-    "Palette:": paletteNum,
+    "Palette:": paletteNames[paletteNum] || paletteNum,
   });
 }
 
@@ -270,4 +272,14 @@ const noiseField = (noiseType, element) => {
     element.updatePixels();
   }
   return element;
+};
+
+window.$fxhashFeatures = {
+  // each token will have a different "Super" feature value between 0 and 1
+  "Occurence:": occurence(),
+  "Centered:": centered,
+  "Gravity:": gravity(),
+  "Mapped Shape:": mappedShape,
+  "Mapped Color:": mappedCol,
+  "Palette:": paletteNames[paletteNum],
 };
