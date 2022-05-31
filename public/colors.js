@@ -3,7 +3,7 @@ paletteNames = [
   "Bright",
   "Delicate",
   "Polos and sneakers",
-  "The beach",
+  "Peachy",
   "Toast",
   "Strawberries",
   "The greys",
