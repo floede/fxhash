@@ -9,8 +9,10 @@ const cellSize = cellSizes[Math.floor(cellSizes.length * fxrand())];
 const golden = (1 + Math.sqrt(5)) / 2;
 const smallGold = -golden + 2;
 
+const paletteNum = Math.floor(fxrand() * colors.length);
+const palette = colors[paletteNum];
+
 let bools = [];
-let paletteNum, palette;
 
 const gravity = function () {
   if (gravityRoll < 30) {
@@ -45,9 +47,6 @@ function setup() {
   c = createCanvas(w, w);
   angleMode(DEGREES);
   colorMode(HSB);
-
-  paletteNum = floor(fxrand() * colors.length);
-  palette = colors[paletteNum];
 
   background(palette[0].hsb);
 
@@ -96,7 +95,7 @@ function draw() {
       if (occurence() === "mapped") {
         let percentage = (distances.d / distances.max) * 100;
         showBig = centered
-          ? rollBig > 25 + percentage
+          ? rollBig > 30 + percentage
           : rollBig < 15 + percentage;
         showSmall = centered
           ? rollSmall > 15 + percentage
@@ -118,7 +117,7 @@ function draw() {
         colNum = floor(
           map(
             distances.d,
-            gridSpacingX,
+            2 * gridSpacingX,
             distances.max - padding,
             palette.length - 1,
             1,
@@ -275,7 +274,6 @@ const noiseField = (noiseType, element) => {
 };
 
 window.$fxhashFeatures = {
-  // each token will have a different "Super" feature value between 0 and 1
   "Occurence:": occurence(),
   "Centered:": centered,
   "Gravity:": gravity(),
