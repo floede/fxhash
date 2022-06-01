@@ -1,3 +1,12 @@
+// Canvas related variables
+const referenceSize = 2000;
+const hasMaxSize = false; // if true, then the canvas cannot be larger than the reference size
+const isCentered = true; // if true the canvas will be vertically and horizontally centered
+
+var canvasSize;
+var windowScale;
+
+// Art related variables
 let centered = fxrand() < 0.75;
 const mappedShape = fxrand() < 0.1;
 const mappedCol = fxrand() < 0.1;
@@ -281,3 +290,16 @@ window.$fxhashFeatures = {
   "Mapped Color:": mappedCol,
   "Palette:": paletteNames[paletteNum],
 };
+
+function setDimensions() {
+  // This is how we constrain the canvas to the smallest dimension of the window
+  canvasSize = min(windowWidth, windowHeight);
+
+  if (hasMaxSize) {
+    canvasSize = min(referenceSize, canvasSize);
+  }
+
+  // windowScale goes from 0.0 to 1.0 as canvasSize goes from 0.0 to referenceSize
+  // if hasMaxSize is set to true, it will be clamped to 1.0 otherwise it keeps growing over 1.0
+  windowScale = map(canvasSize, 0, referenceSize, 0, 1, hasMaxSize);
+}
