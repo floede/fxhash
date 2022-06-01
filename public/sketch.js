@@ -1,7 +1,7 @@
 // Canvas related variables
 const referenceSize = 2000;
-const hasMaxSize = false; // if true, then the canvas cannot be larger than the reference size
-const isCentered = true; // if true the canvas will be vertically and horizontally centered
+const hasMaxSize = true; // if true, then the canvas cannot be larger than the reference size
+const isCentered = false; // if true the canvas will be vertically and horizontally centered
 
 var canvasSize;
 var windowScale;
@@ -51,13 +51,16 @@ if (occurence() === "random") {
 
 function setup() {
   pixelDensity(1);
-  let w = min(windowWidth, windowHeight);
+  setDimensions();
+  if (isCentered) {
+    centerCanvas();
+  }
+  createCanvas(canvasSize, canvasSize);
+  let w = canvasSize; // min(windowWidth, windowHeight);
 
-  c = createCanvas(w, w);
+  // c = createCanvas(w, w);
   angleMode(DEGREES);
   colorMode(HSB);
-
-  background(palette[0].hsb);
 
   padding = Math.ceil(w / 25);
 
@@ -81,8 +84,14 @@ function setup() {
   pg = createGraphics(w, w);
 }
 
+function windowResized() {
+  setDimensions();
+  resizeCanvas(canvasSize, canvasSize);
+}
+
 function draw() {
   //translate(-width / 2, -height / 2);
+  background(palette[0].hsb);
   noStroke();
   for (let x = 0; x < gridDivsX; x++) {
     for (let y = 0; y < gridDivsY; y++) {
