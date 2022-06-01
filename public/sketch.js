@@ -140,6 +140,7 @@ function draw() {
   image(pg, 0, 0);
 
   noLoop();
+  fxpreview();
 }
 
 class BigCircle {
