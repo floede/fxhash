@@ -1,5 +1,5 @@
 // Canvas related variables
-const referenceSize = 2000;
+const referenceSize = 1080;
 const hasMaxSize = true; // if true, then the canvas cannot be larger than the reference size
 const isCentered = false; // if true the canvas will be vertically and horizontally centered
 
@@ -20,8 +20,6 @@ const smallGold = -golden + 2;
 
 const paletteNum = Math.floor(fxrand() * colors.length);
 const palette = colors[paletteNum];
-
-let bools = [];
 
 const gravity = function () {
   if (gravityRoll < 30) {
@@ -55,46 +53,26 @@ function setup() {
   if (isCentered) {
     centerCanvas();
   }
-  createCanvas(canvasSize, canvasSize);
-  let w = canvasSize; // min(windowWidth, windowHeight);
+  c = createCanvas(canvasSize, canvasSize);
+  let w = canvasSize;
 
-  // c = createCanvas(w, w);
   angleMode(DEGREES);
   colorMode(HSB);
 
   padding = Math.ceil(w / 25);
 
-  // number of rows and columns of the grid
-  gridDivsX = cellSize;
-  gridDivsY = cellSize;
+  gridSpacingX = (w - padding * 2) / cellSize;
+  gridSpacingY = (w - padding * 2) / cellSize;
 
-  // actual spacing between grid points
-  gridSpacingX = (w - padding * 2) / gridDivsX;
-  gridSpacingY = (w - padding * 2) / gridDivsY;
-
-  // here we populate the 2d boolean array
-
-  for (let x = 0; x < gridDivsX; x++) {
-    var column = [];
-    for (let y = 0; y < gridDivsY; y++) {
-      column.push(1);
-    }
-    bools.push(column);
-  }
   pg = createGraphics(w, w);
-}
-
-function windowResized() {
-  setDimensions();
-  resizeCanvas(canvasSize, canvasSize);
 }
 
 function draw() {
   //translate(-width / 2, -height / 2);
   background(palette[0].hsb);
   noStroke();
-  for (let x = 0; x < gridDivsX; x++) {
-    for (let y = 0; y < gridDivsY; y++) {
+  for (let x = 0; x < cellSize; x++) {
+    for (let y = 0; y < cellSize; y++) {
       let distances = { max: 0, d: 0 };
       let colNum = false;
 
@@ -161,21 +139,7 @@ function draw() {
   noiseField("random", pg);
   image(pg, 0, 0);
 
-  /*   stroke(100);
-  line(padding, 0, padding, height);
-  line(width - padding, 0, width - padding, height);
-  line(0, padding, height, padding);
-  line(0, height - padding, width, height - padding); */
   noLoop();
-  //saveCanvas(c, `Flowers - ${paletteNames[paletteNum]} - ${Date.now()}`, "png");
-  console.table({
-    "Occurence:": occurence(),
-    "Centered:": centered,
-    "Gravity:": gravity(),
-    "Mapped Shape:": mappedShape,
-    "Mapped Color:": mappedCol,
-    "Palette:": paletteNames[paletteNum] || paletteNum,
-  });
 }
 
 class BigCircle {
@@ -279,7 +243,7 @@ const noiseField = (noiseType, element) => {
     for (let x = 0; x < element.width; x++) {
       for (let y = 0; y < element.height; y++) {
         let index = (x + y * width) * 4;
-        var r = 20 + fxrand() * 215; //random(20, 235);
+        var r = 20 + fxrand() * 215;
         element.pixels[index + 0] = r;
         element.pixels[index + 1] = r;
         element.pixels[index + 2] = r;
@@ -302,7 +266,7 @@ window.$fxhashFeatures = {
 
 function setDimensions() {
   // This is how we constrain the canvas to the smallest dimension of the window
-  canvasSize = min(windowWidth, windowHeight);
+  canvasSize = 1080; // min(windowWidth, windowHeight);
 
   if (hasMaxSize) {
     canvasSize = min(referenceSize, canvasSize);
@@ -311,4 +275,14 @@ function setDimensions() {
   // windowScale goes from 0.0 to 1.0 as canvasSize goes from 0.0 to referenceSize
   // if hasMaxSize is set to true, it will be clamped to 1.0 otherwise it keeps growing over 1.0
   windowScale = map(canvasSize, 0, referenceSize, 0, 1, hasMaxSize);
+}
+
+function keyPressed() {
+  if (key === "s") {
+    saveCanvas(
+      c,
+      `In Search of Flowers - ${paletteNames[paletteNum]} - ${Date.now()}`,
+      "png"
+    );
+  }
 }
