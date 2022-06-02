@@ -21,6 +21,9 @@ const smallGold = -golden + 2;
 const paletteNum = Math.floor(fxrand() * colors.length);
 const palette = colors[paletteNum];
 
+const flowerDecoration = fxrand() > 0.5 ? 2 : 1;
+const petalOrientation = fxrand() > 0.5 ? 0 : 180;
+
 let bools = [];
 
 const gravity = function () {
@@ -84,17 +87,14 @@ function setup() {
   pg = createGraphics(w, w);
 }
 
-function windowResized() {
-  setDimensions();
-  resizeCanvas(canvasSize, canvasSize);
-}
-
 function draw() {
   //translate(-width / 2, -height / 2);
   background(palette[0].hsb);
   noStroke();
   for (let x = 0; x < gridDivsX; x++) {
     for (let y = 0; y < gridDivsY; y++) {
+      let center = false;
+      let rotation = 0;
       let distances = { max: 0, d: 0 };
       let colNum = false;
 
@@ -126,6 +126,16 @@ function draw() {
         showSmall = true;
       }
 
+      if (x === cellSize / 2 - 1 || x === cellSize / 2) {
+        rotation = petalOrientation + (x === cellSize / 2 ? 180 : 90);
+        if (y === cellSize / 2 - 1 || y === cellSize / 2) {
+          if (y === cellSize / 2) {
+            rotation = petalOrientation + (x === cellSize / 2 ? 270 : 0);
+          }
+          center = true;
+        }
+      }
+
       let BigType;
       if (mappedShape) {
         BigType = floor(map(distances.d, gridSpacingX, distances.max, 5, 1)); //  - 2 * padding
@@ -144,9 +154,23 @@ function draw() {
         );
       }
 
+      if (center) {
+        showBig = true;
+        showSmall = true;
+        BigType = 5;
+      }
+
       if (showBig) {
-        rotate(90 * floor(4 * fxrand()));
+        if (center) {
+          colNum = palette.length - 1;
+        }
+        rotate(rotation);
         let bigCircle = new BigCircle(BigType, colNum);
+      }
+
+      if (center) {
+        BigType = flowerDecoration;
+        colNum = palette.length - 2;
       }
 
       if (showSmall) {
