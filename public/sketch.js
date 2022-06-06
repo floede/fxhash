@@ -7,7 +7,7 @@ var canvasSize;
 var windowScale;
 
 // Art related variables
-let centered = fxrand() < 0.75;
+let centered = fxrand() < 0.85;
 const mappedShape = fxrand() < 0.1;
 const mappedCol = fxrand() < 0.1;
 const occurenceRoll = fxrand() * 100;
@@ -22,11 +22,11 @@ const paletteNum = Math.floor(fxrand() * colors.length);
 const palette = colors[paletteNum];
 
 const gravity = function () {
-  if (gravityRoll < 30) {
+  if (gravityRoll < 50) {
     return "center";
-  } else if (gravityRoll < 47.5) {
+  } else if (gravityRoll < 62.5) {
     return "vertical";
-  } else if (gravityRoll < 70) {
+  } else if (gravityRoll < 75) {
     return "horizontal";
   } else if (gravityRoll < 87.5) {
     return "tl2br";
@@ -34,9 +34,9 @@ const gravity = function () {
 };
 
 const occurence = () => {
-  if (occurenceRoll <= 5) {
+  if (occurenceRoll <= 2.5) {
     return "always";
-  } else if (occurenceRoll < 55) {
+  } else if (occurenceRoll < 85) {
     return "mapped";
   } else {
     return "random";
@@ -141,6 +141,14 @@ function draw() {
 
   noLoop();
   fxpreview();
+  console.table({
+    "Occurence:": occurence(),
+    "Centered:": centered,
+    "Gravity:": gravity(),
+    "Mapped Shape:": mappedShape,
+    "Mapped Color:": mappedCol,
+    "Palette:": paletteNames[paletteNum],
+  });
 }
 
 class BigCircle {
@@ -182,12 +190,12 @@ class BigCircle {
 class SmallCircle {
   constructor(type = 0, colNum = false) {
     this.type = type;
-    if (mappedShape && occurence === "always") {
+
+    if (mappedShape && occurence() === "always") {
       this.col = colNum || 1 + floor(fxrand() * (palette.length - 1));
     } else {
       this.col = colNum || floor(fxrand() * palette.length);
     }
-
     if (type < 3) {
       if (type === 2 || (type === 0 && fxrand() > 0.5)) {
         noStroke();
