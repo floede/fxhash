@@ -38,8 +38,8 @@ function setup() {
     var column = [];
     for (let y = 0; y < rows; y++) {
       column.push({
-        x: margin + padding + (x > 0 ? gutterH : 0) + x * cellSize,
-        y: margin + padding + (y > 0 ? gutterV : 0) + y * cellSize,
+        x: margin + padding + (x > 0 ? x * gutterH : 0) + x * cellSize,
+        y: margin + padding + (y > 0 ? y * gutterV : 0) + y * cellSize,
       });
     }
     coords.push(column);
