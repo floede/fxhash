@@ -3,54 +3,15 @@ const referenceSize = 2000;
 const hasMaxSize = true; // if true, then the canvas cannot be larger than the reference size
 const isCentered = false; // if true the canvas will be vertically and horizontally centered
 
-var canvasSize;
-var windowScale;
+let w, h;
+let windowScale;
 
 // Art related variables
-let centered = fxrand() < 0.75;
-const mappedShape = fxrand() < 0.1;
-const mappedCol = fxrand() < 0.1;
-const occurenceRoll = fxrand() * 100;
-const gravityRoll = fxrand() * 100;
-const cellSizes = [10, 16, 20];
-const cellSize = cellSizes[Math.floor(cellSizes.length * fxrand())];
+let margin, padding, gutterV, gutterH, rows, cols, cellSize;
+let coords = [];
 
-const golden = (1 + Math.sqrt(5)) / 2;
-const smallGold = -golden + 2;
-
-const paletteNum = Math.floor(fxrand() * colors.length);
-const palette = colors[paletteNum];
-
-const flowerDecoration = fxrand() > 0.5 ? 2 : 1;
-const petalOrientation = fxrand() > 0.5 ? 0 : 180;
-
-let bools = [];
-
-const gravity = function () {
-  if (gravityRoll < 30) {
-    return "center";
-  } else if (gravityRoll < 47.5) {
-    return "vertical";
-  } else if (gravityRoll < 70) {
-    return "horizontal";
-  } else if (gravityRoll < 87.5) {
-    return "tl2br";
-  } else return "tr2bl";
-};
-
-const occurence = () => {
-  if (occurenceRoll <= 5) {
-    return "always";
-  } else if (occurenceRoll < 55) {
-    return "mapped";
-  } else {
-    return "random";
-  }
-};
-
-if (occurence() === "random") {
-  centered = true;
-}
+rows = 3;
+cols = 3;
 
 function setup() {
   pixelDensity(1);
@@ -58,148 +19,82 @@ function setup() {
   if (isCentered) {
     centerCanvas();
   }
-  createCanvas(canvasSize, canvasSize);
-  let w = canvasSize; // min(windowWidth, windowHeight);
+  createCanvas(w, h);
 
   // c = createCanvas(w, w);
   angleMode(DEGREES);
   colorMode(HSB);
 
-  padding = Math.ceil(w / 25);
+  margin = Math.ceil(w / 25);
+  padding = 0;
+  gutterH = Math.ceil(w / 100);
+  gutterV = Math.ceil(h / 100);
 
-  // number of rows and columns of the grid
-  gridDivsX = cellSize;
-  gridDivsY = cellSize;
+  cellSize = (w - 2 * margin - gutterH * (cols - 1)) / cols;
 
-  // actual spacing between grid points
-  gridSpacingX = (w - padding * 2) / gridDivsX;
-  gridSpacingY = (w - padding * 2) / gridDivsY;
+  // here we populate the 2d coords array
 
-  // here we populate the 2d boolean array
-
-  for (let x = 0; x < gridDivsX; x++) {
+  for (let x = 0; x < cols; x++) {
     var column = [];
-    for (let y = 0; y < gridDivsY; y++) {
-      column.push(1);
+    for (let y = 0; y < rows; y++) {
+      column.push({
+        x: margin + padding + (x > 0 ? gutterH : 0) + x * cellSize,
+        y: margin + padding + (y > 0 ? gutterV : 0) + y * cellSize,
+      });
     }
-    bools.push(column);
+    coords.push(column);
   }
-  pg = createGraphics(w, w);
+  //pg = createGraphics(w, w);
 }
 
 function draw() {
-  //translate(-width / 2, -height / 2);
-  background(palette[0].hsb);
+  // translate(-width / 2, -height / 2);
+  background(50);
   noStroke();
-  for (let x = 0; x < gridDivsX; x++) {
-    for (let y = 0; y < gridDivsY; y++) {
-      let center = false;
+  for (let x = 0; x < coords.length; x++) {
+    for (let y = 0; y < coords[x].length; y++) {
       let rotation = 0;
-      let distances = { max: 0, d: 0 };
       let colNum = false;
 
-      let scaledX = padding + 0.5 * gridSpacingX + x * gridSpacingX;
-      let scaledY = padding + 0.5 * gridSpacingY + y * gridSpacingY;
+      let scaledX = coords[x][y].x;
+      let scaledY = coords[x][y].y;
 
-      findDistances(distances, scaledX, scaledY, gravity());
+      console.log("DRAW", coords[x][y]);
 
       push();
-      translate(scaledX, scaledY);
-      let rollBig = 100 * fxrand();
-      let rollSmall = 100 * fxrand();
-
-      let showBig, showSmall;
-
-      if (occurence() === "mapped") {
-        let percentage = (distances.d / distances.max) * 100;
-        showBig = centered
-          ? rollBig > 30 + percentage
-          : rollBig < 15 + percentage;
-        showSmall = centered
-          ? rollSmall > 15 + percentage
-          : rollSmall < 5 + percentage;
-      } else if (occurence() === "random") {
-        showBig = fxrand() > 0.55;
-        showSmall = fxrand() > 0.65;
-      } else {
-        showBig = true;
-        showSmall = true;
-      }
-
-      if (x === cellSize / 2 - 1 || x === cellSize / 2) {
-        rotation = petalOrientation + (x === cellSize / 2 ? 180 : 90);
-        if (y === cellSize / 2 - 1 || y === cellSize / 2) {
-          if (y === cellSize / 2) {
-            rotation = petalOrientation + (x === cellSize / 2 ? 270 : 0);
-          }
-          center = true;
-        }
-      }
-
-      let BigType;
-      if (mappedShape) {
-        BigType = floor(map(distances.d, gridSpacingX, distances.max, 5, 1)); //  - 2 * padding
-      }
-
-      if (mappedCol) {
-        colNum = floor(
-          map(
-            distances.d,
-            2 * gridSpacingX,
-            distances.max - padding,
-            palette.length - 1,
-            1,
-            true
-          )
-        );
-      }
-
-      if (center) {
-        showBig = true;
-        showSmall = true;
-        BigType = 5;
-      }
-
-      if (showBig) {
-        if (center) {
-          colNum = palette.length - 1;
-        }
-        rotate(rotation);
-        let bigCircle = new BigCircle(BigType, colNum);
-      }
-
-      if (center) {
-        BigType = flowerDecoration;
-        colNum = palette.length - 2;
-      }
-
-      if (showSmall) {
-        let smallCircle = new SmallCircle(BigType, colNum);
-      }
-
+      fill(100);
+      translate(scaledX + cellSize / 2, scaledY + cellSize / 2);
+      circle(0, 0, cellSize);
       pop();
     }
   }
 
-  pg.background(100);
-  noiseField("random", pg);
-  image(pg, 0, 0);
+  // pg.background(100);
+  // noiseField("random", pg);
+  // image(pg, 0, 0);
 
-  /*   stroke(100);
-  line(padding, 0, padding, height);
-  line(width - padding, 0, width - padding, height);
-  line(0, padding, height, padding);
-  line(0, height - padding, width, height - padding); */
+  const mp = margin + padding;
+  stroke(100);
+  line(mp, 0, mp, height);
+  line(width - mp, 0, width - mp, height);
+  line(0, mp, height, mp);
+  line(0, height - mp, width, height - mp);
+
+  // gutter lines
+  line(mp + cellSize, 0, mp + cellSize, height);
+  line(mp + cellSize + gutterH, 0, mp + cellSize + gutterH, height);
+  line(0, mp + cellSize, height, mp + cellSize);
+  line(0, mp + cellSize + gutterV, height, mp + cellSize + gutterV);
   noLoop();
   //saveCanvas(c, `Flowers - ${paletteNames[paletteNum]} - ${Date.now()}`, "png");
-  console.table({
+  /*   console.table({
     "Occurence:": occurence(),
     "Centered:": centered,
     "Gravity:": gravity(),
     "Mapped Shape:": mappedShape,
     "Mapped Color:": mappedCol,
     "Palette:": paletteNames[paletteNum] || paletteNum,
-  });
+  }); */
 }
 
 class BigCircle {
@@ -315,24 +210,17 @@ const noiseField = (noiseType, element) => {
   return element;
 };
 
-window.$fxhashFeatures = {
-  "Occurence:": occurence(),
-  "Centered:": centered,
-  "Gravity:": gravity(),
-  "Mapped Shape:": mappedShape,
-  "Mapped Color:": mappedCol,
-  "Palette:": paletteNames[paletteNum],
-};
+window.$fxhashFeatures = {};
 
 function setDimensions() {
   // This is how we constrain the canvas to the smallest dimension of the window
-  canvasSize = min(windowWidth, windowHeight);
+  h = w = min(windowWidth, windowHeight);
 
   if (hasMaxSize) {
-    canvasSize = min(referenceSize, canvasSize);
+    w = min(referenceSize, w);
   }
 
   // windowScale goes from 0.0 to 1.0 as canvasSize goes from 0.0 to referenceSize
   // if hasMaxSize is set to true, it will be clamped to 1.0 otherwise it keeps growing over 1.0
-  windowScale = map(canvasSize, 0, referenceSize, 0, 1, hasMaxSize);
+  windowScale = map(w, 0, referenceSize, 0, 1, hasMaxSize);
 }
