@@ -3,15 +3,20 @@ const referenceSize = 2000;
 const hasMaxSize = true; // if true, then the canvas cannot be larger than the reference size
 const isCentered = false; // if true the canvas will be vertically and horizontally centered
 
+const golden = (1 + Math.sqrt(5)) / 2;
+const smallGold = -golden + 2;
+
+const goldenFactor = 0;
+
 let w, h;
 let windowScale;
 
 // Art related variables
-let margin, padding, gutterV, gutterH, rows, cols, cellSize;
+let margin, gutterV, gutterH, rows, cols, cellSize, goldenCell;
 let coords = [];
+let elements = [];
 
-rows = 3;
-cols = 3;
+const palettes = [[10, 30, 50, 70, 90]];
 
 function setup() {
   pixelDensity(1);
@@ -19,27 +24,35 @@ function setup() {
   if (isCentered) {
     centerCanvas();
   }
-  createCanvas(w, h);
+  c = createCanvas(w, h);
 
-  // c = createCanvas(w, w);
   angleMode(DEGREES);
   colorMode(HSB);
 
-  margin = Math.ceil(w / 25);
-  padding = 0;
-  gutterH = Math.ceil(w / 100);
-  gutterV = Math.ceil(h / 100);
+  goldenCell =
+    goldenFactor > 0 ? goldenCellSize(width * smallGold) : width * smallGold;
 
-  cellSize = (w - 2 * margin - gutterH * (cols - 1)) / cols;
+  let tempSpace = width % goldenCell;
+
+  rows = int(width / goldenCell);
+  cols = int(height / goldenCell);
+
+  const spaceUnit = tempSpace / (4 + (cols - 1));
+  gutterH = spaceUnit;
+  gutterV = spaceUnit;
+
+  margin = 2 * spaceUnit;
 
   // here we populate the 2d coords array
-
   for (let x = 0; x < cols; x++) {
     var column = [];
     for (let y = 0; y < rows; y++) {
       column.push({
-        x: margin + padding + (x > 0 ? x * gutterH : 0) + x * cellSize,
-        y: margin + padding + (y > 0 ? y * gutterV : 0) + y * cellSize,
+        x: margin + (x > 0 ? x * gutterH : 0) + x * goldenCell,
+        y: margin + (y > 0 ? y * gutterV : 0) + y * goldenCell,
+        shape: floor(random(0, 8)),
+        pattern: 1,
+        palette: 0,
       });
     }
     coords.push(column);
@@ -49,7 +62,7 @@ function setup() {
 
 function draw() {
   // translate(-width / 2, -height / 2);
-  background(50);
+  background(10);
   noStroke();
   for (let x = 0; x < coords.length; x++) {
     for (let y = 0; y < coords[x].length; y++) {
@@ -59,12 +72,17 @@ function draw() {
       let scaledX = coords[x][y].x;
       let scaledY = coords[x][y].y;
 
-      console.log("DRAW", coords[x][y]);
-
       push();
-      fill(100);
-      translate(scaledX + cellSize / 2, scaledY + cellSize / 2);
-      circle(0, 0, cellSize);
+      translate(scaledX + goldenCell / 2, scaledY + goldenCell / 2);
+      elements.push(
+        new BaseElement(
+          scaledX,
+          scaledY,
+          coords[x][y].shape,
+          coords[x][y].pattern,
+          coords[x][y].palette
+        )
+      );
       pop();
     }
   }
@@ -73,7 +91,8 @@ function draw() {
   // noiseField("random", pg);
   // image(pg, 0, 0);
 
-  const mp = margin + padding;
+  /*
+  const mp = margin + ;
   stroke(100);
   line(mp, 0, mp, height);
   line(width - mp, 0, width - mp, height);
@@ -81,12 +100,18 @@ function draw() {
   line(0, height - mp, width, height - mp);
 
   // gutter lines
-  line(mp + cellSize, 0, mp + cellSize, height);
-  line(mp + cellSize + gutterH, 0, mp + cellSize + gutterH, height);
-  line(0, mp + cellSize, height, mp + cellSize);
-  line(0, mp + cellSize + gutterV, height, mp + cellSize + gutterV);
+  line(mp + goldenCell, 0, mp + goldenCell, height);
+  line(mp + goldenCell + gutterH, 0, mp + goldenCell + gutterH, height);
+  line(0, mp + goldenCell, height, mp + goldenCell);
+  line(0, mp + goldenCell + gutterV, height, mp + goldenCell + gutterV);
+
+  // Golden ratio lines
+  stroke(20);
+  line(width / golden, 0, width / golden, height);
+  line(width - width / golden, 0, width - width / golden, height);
+  */
   noLoop();
-  //saveCanvas(c, `Flowers - ${paletteNames[paletteNum]} - ${Date.now()}`, "png");
+  // saveCanvas(c, `The D - Super Ellipse`, "png");
   /*   console.table({
     "Occurence:": occurence(),
     "Centered:": centered,
@@ -97,100 +122,128 @@ function draw() {
   }); */
 }
 
-class BigCircle {
-  constructor(type = 0, colNum = false) {
-    this.sizeX = ceil(gridSpacingX);
-    this.sizeY = ceil(gridSpacingY);
-    this.type = type;
-    this.randCol = 1 + floor(fxrand() * (palette.length - 1));
-    let shapeRoll = fxrand();
-    if (type === 5 || (type === 0 && shapeRoll > 0.5)) {
-      fill(palette[colNum || this.randCol].hsb);
-      rectMode(CENTER);
-      rect(
-        0,
-        0,
-        this.sizeX,
-        this.sizeY,
-        0.5 * this.sizeX,
-        0.5 * this.sizeX,
-        0.5 * this.sizeX,
-        0
-      );
-    } else if (type === 4 || type === 3 || (type === 0 && shapeRoll <= 0.5)) {
-      if (type === 4 || (type === 0 && fxrand() > 0.5)) {
-        let col = palette[colNum || this.randCol].hsb;
-        fill(col);
-        stroke(col);
-      } else if (type === 3 || type === 0) {
-        noFill();
-        stroke(palette[colNum || this.randCol].hsb);
-      }
-      strokeWeight(0.05 * this.sizeX);
-      let circleSize = this.sizeX - 0.05 * this.sizeX;
-      ellipse(0, 0, circleSize, circleSize, 50);
-    }
+class BaseElement {
+  constructor(scaledX, scaledY, shape, pattern, palette) {
+    this.realX = scaledX;
+    this.realY = scaledY;
+    this.shape = shape;
+    this.pattern = pattern;
+    this.palette = palettes[palette];
+
+    baseShape(this.shape, this.pattern, this.palette);
   }
 }
 
-class SmallCircle {
-  constructor(type = 0, colNum = false) {
-    this.type = type;
-    if (mappedShape && occurence === "always") {
-      this.col = colNum || 1 + floor(fxrand() * (palette.length - 1));
-    } else {
-      this.col = colNum || floor(fxrand() * palette.length);
-    }
+const baseShape = (shape, pattern, palette) => {
+  switch (shape) {
+    case 1:
+      push();
+      translate(0, -goldenCell / 2);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
 
-    if (type < 3) {
-      if (type === 2 || (type === 0 && fxrand() > 0.5)) {
-        noStroke();
-        fill(palette[this.col].hsb);
-      } else if (type === 1 || type === 0) {
-        noFill();
-        stroke(palette[this.col].hsb);
-      }
-      strokeWeight(0.05 * gridSpacingX);
-      // ellipse(0, 0, gridSpacingX / 2, gridSpacingX / 2);
-      ellipse(0, 0, gridSpacingX / golden, gridSpacingX / golden);
-      //ellipse(0, 0, gridSpacingX * smallGold, gridSpacingX * smallGold);
-    }
-  }
-}
-
-function findDistances(distances, x, y, type) {
-  switch (type) {
-    case "center":
-      distances.max = dist(0, 0, width / 2, height / 2);
-      distances.d = dist(x, y, width / 2, height / 2);
+      push();
+      translate(0, 0);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
       break;
 
-    case "vertical":
-      distances.max = dist(0, 0, width / 2, 0);
-      distances.d = dist(x, y, width / 2, y);
+    case 2:
+      push();
+      translate(0, 0);
+      rotate(180);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
+
+      push();
+      translate(0, goldenCell / 2);
+      rotate(180);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
       break;
 
-    case "horizontal":
-      distances.max = dist(0, 0, 0, height / 2);
-      distances.d = dist(x, y, x, height / 2);
+    case 3:
+      push();
+      translate(0, -goldenCell / 2);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
+
+      push();
+      translate(0, goldenCell / 2);
+      rotate(180);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
       break;
 
-    case "tl2br":
-      distances.max = dist(0, 0, 0, width);
-      distances.d = dist(x, y, x, x);
+    case 4:
+      push();
+      translate(0, 0);
+      rotate(180);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
+      push();
+      translate(0, 0);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
       break;
 
-    case "tr2bl":
-      distances.max = dist(0, 0, 0, width);
-      distances.d = dist(x, y, x, width - x);
+    case 5:
+      push();
+      rotate(90);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
+
+      push();
+      translate(goldenCell / 2, 0);
+      rotate(90);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
+      break;
+
+    case 6:
+      push();
+      translate(-goldenCell / 2, 0);
+      rotate(-90);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
+      push();
+      rotate(-90);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
+      break;
+
+    case 7:
+      push();
+      rotate(90);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
+      push();
+      rotate(-90);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
+
       break;
 
     default:
+      push();
+      translate(-goldenCell / 2, 0);
+      rotate(-90);
+      patternChoser(pattern, (c = { one: palette[4] }));
+      pop();
+
+      push();
+      translate(goldenCell / 2, 0);
+      rotate(90);
+      patternChoser(pattern, (c = { one: palette[2] }));
+      pop();
       break;
   }
-
-  return distances;
-}
+};
 
 const noiseField = (noiseType, element) => {
   if (noiseType === "random") {
@@ -223,4 +276,70 @@ function setDimensions() {
   // windowScale goes from 0.0 to 1.0 as canvasSize goes from 0.0 to referenceSize
   // if hasMaxSize is set to true, it will be clamped to 1.0 otherwise it keeps growing over 1.0
   windowScale = map(w, 0, referenceSize, 0, 1, hasMaxSize);
+}
+
+let count = 0;
+function goldenCellSize(n) {
+  let size = n / golden;
+  count++;
+  if (count < goldenFactor) {
+    return goldenCellSize(size);
+  }
+  return size;
+}
+
+const patternChoser = (pattern, c) => {
+  switch (pattern) {
+    case 1:
+      pattern1(goldenCell, 0, 180, c);
+      break;
+
+    case 2:
+      if (pattern === 2) {
+        arc(
+          0,
+          -goldenCell / 2,
+          goldenCell / golden,
+          goldenCell / golden,
+          0,
+          180
+        );
+      }
+      if (pattern === 2) {
+        fill(palette[2]);
+        arc(0, 0, goldenCell / golden, goldenCell / golden, 0, 180);
+      }
+      break;
+
+    default:
+      break;
+  }
+};
+
+const pattern1 = (size, start, end, col) => {
+  fill(col.one);
+  arc(0, 0, size, size, start, end);
+
+  /*   let n = 2.5;
+  let a = size / 2;
+  let b = size / 2;
+
+  noStroke();
+  beginShape();
+  for (let t = 0; t <= 180; t += 5) {
+    let x = pow(abs(cos(t)), 2 / n) * a * sgn(cos(t));
+    let y = pow(abs(sin(t)), 2 / n) * b * sgn(sin(t));
+    vertex(x, y);
+  }
+  endShape(CLOSE); */
+};
+
+function sgn(w) {
+  if (w < 0) {
+    return -1;
+  } else if (w === 0) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
