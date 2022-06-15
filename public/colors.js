@@ -24,15 +24,6 @@ paletteNames = [
 colors = [
   [
     {
-      name: "Eerie Black",
-      hex: "#1c1d21",
-      rgb: [28, 29, 33],
-      cmyk: [15, 12, 0, 87],
-      hsb: [228, 15, 13],
-      hsl: [228, 8, 12],
-      lab: [11, 1, -3],
-    },
-    {
       name: "Electric Blue",
       hex: "#00e8fc",
       rgb: [0, 232, 252],
@@ -70,15 +61,6 @@ colors = [
     },
   ],
   [
-    {
-      name: "Black Chocolate",
-      hex: "#060f01",
-      rgb: [6, 15, 1],
-      cmyk: [60, 0, 93, 94],
-      hsb: [99, 93, 6],
-      hsl: [99, 88, 3],
-      lab: [3, -5, 5],
-    },
     {
       name: "Carolina Blue",
       hex: "#1e99e6",
@@ -118,15 +100,6 @@ colors = [
     { hsb: [99, 7, 94] },
   ],
   [
-    {
-      name: "Rich Black FOGRA 39",
-      hex: "#060a0f",
-      rgb: [6, 10, 15],
-      cmyk: [60, 33, 0, 94],
-      hsb: [213, 60, 6],
-      hsl: [213, 43, 4],
-      lab: [3, 0, -3],
-    },
     {
       name: "Iceberg",
       hex: "#79addc",
@@ -209,15 +182,6 @@ colors = [
       hsb: [207, 49, 92],
       hsl: [207, 73, 69],
       lab: [72, -6, -32],
-    },
-    {
-      name: "Onyx",
-      hex: "#37393a",
-      rgb: [55, 57, 58],
-      cmyk: [5, 2, 0, 77],
-      hsb: [200, 5, 23],
-      hsl: [200, 3, 22],
-      lab: [24, -1, -1],
     },
   ],
   [
@@ -363,15 +327,6 @@ colors = [
   ],
   [
     {
-      name: "Rich Black FOGRA 39",
-      hex: "#0D0D0D",
-      rgb: [13, 13, 13],
-      cmyk: [0, 0, 0, 95],
-      hsb: [0, 0, 5],
-      hsl: [0, 0, 5],
-      lab: [4, 0, 0],
-    },
-    {
       name: "Onyx",
       hex: "#404040",
       rgb: [64, 64, 64],
@@ -409,15 +364,6 @@ colors = [
     },
   ],
   [
-    {
-      name: "Smoky Black",
-      hex: "#100804",
-      rgb: [16, 8, 4],
-      cmyk: [0, 50, 75, 94],
-      hsb: [20, 75, 6],
-      hsl: [20, 60, 4],
-      lab: [3, 2, 2],
-    },
     {
       name: "Old Lavender",
       hex: "#6d6875",
@@ -465,15 +411,6 @@ colors = [
     },
   ],
   [
-    {
-      name: "Raisin Black",
-      hex: "#202231",
-      rgb: [32, 34, 49],
-      cmyk: [35, 31, 0, 81],
-      hsb: [233, 35, 19],
-      hsl: [233, 21, 16],
-      lab: [14, 3, -10],
-    },
     {
       name: "Manatee",
       hex: "#8d99ae",
@@ -717,6 +654,15 @@ colors = [
       lab: [71, 0, 0],
     },
     {
+      name: "Cerulean Blue",
+      hex: "#0056e0",
+      rgb: [0, 86, 224],
+      cmyk: [100, 62, 0, 12],
+      hsb: [217, 100, 88],
+      hsl: [217, 100, 44],
+      lab: [41, 34, -75],
+    },
+    {
       name: "Platinum",
       hex: "#e6e6e6",
       rgb: [230, 230, 230],
@@ -737,13 +683,22 @@ colors = [
       lab: [95, -1, -2],
     },
     {
-      name: "Raisin Black",
-      hex: "#202231",
-      rgb: [32, 34, 49],
-      cmyk: [35, 31, 0, 81],
-      hsb: [233, 35, 19],
-      hsl: [233, 21, 16],
-      lab: [14, 3, -10],
+      name: "Imperial Red",
+      hex: "#ef233c",
+      rgb: [239, 35, 60],
+      cmyk: [0, 85, 75, 6],
+      hsb: [353, 85, 94],
+      hsl: [353, 86, 54],
+      lab: [52, 73, 40],
+    },
+    {
+      name: "Cultured",
+      hex: "#edf2f4",
+      rgb: [237, 242, 244],
+      cmyk: [3, 1, 0, 4],
+      hsb: [197, 3, 96],
+      hsl: [197, 24, 94],
+      lab: [95, -1, -2],
     },
     {
       name: "Imperial Red",
@@ -792,26 +747,8 @@ colors = [
       hsl: [190, 53, 68],
       lab: [77, -19, -15],
     },
-    {
-      name: "Raisin Black",
-      hex: "#231d23",
-      rgb: [35, 29, 35],
-      cmyk: [0, 17, 0, 86],
-      hsb: [300, 17, 14],
-      hsl: [300, 9, 13],
-      lab: [12, 4, -3],
-    },
   ],
   [
-    {
-      name: "Olive Drab 7",
-      hex: "#272701",
-      rgb: [39, 39, 1],
-      cmyk: [0, 0, 97, 85],
-      hsb: [60, 97, 15],
-      hsl: [60, 95, 8],
-      lab: [15, -6, 21],
-    },
     {
       name: "Blue Violet Crayola",
       hex: "#845ec2",
@@ -851,15 +788,6 @@ colors = [
   ],
   [
     {
-      name: "Oxford Blue",
-      hex: "#0c052b",
-      rgb: [12, 5, 43],
-      cmyk: [72, 88, 0, 83],
-      hsb: [251, 88, 17],
-      hsl: [251, 79, 9],
-      lab: [3, 12, -22],
-    },
-    {
       name: "Majorelle Blue",
       hex: "#6649f3",
       rgb: [102, 73, 243],
@@ -897,15 +825,6 @@ colors = [
     },
   ],
   [
-    {
-      name: "Dark Sienna",
-      hex: "#291000",
-      rgb: [41, 16, 0],
-      cmyk: [0, 61, 100, 84],
-      hsb: [23, 100, 16],
-      hsl: [23, 100, 8],
-      lab: [8, 11, 12],
-    },
     {
       name: "French Sky Blue",
       hex: "#86b8ff",
@@ -953,15 +872,6 @@ colors = [
     },
   ],
   [
-    {
-      name: "Dark Jungle Green",
-      hex: "#081a04",
-      rgb: [8, 26, 4],
-      cmyk: [69, 0, 85, 90],
-      hsb: [109, 85, 10],
-      hsl: [109, 73, 6],
-      lab: [7, -11, 9],
-    },
     {
       name: "Forest Green Traditional",
       hex: "#2a4b1b",
