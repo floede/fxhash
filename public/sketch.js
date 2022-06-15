@@ -6,7 +6,7 @@ const isCentered = false; // if true the canvas will be vertically and horizonta
 const golden = (1 + Math.sqrt(5)) / 2;
 const smallGold = -golden + 2;
 
-const goldenFactor = 0;
+const goldenFactor = 1;
 
 let w, h;
 let windowScale;
@@ -16,7 +16,38 @@ let margin, gutterV, gutterH, rows, cols, cellSize, goldenCell;
 let coords = [];
 let elements = [];
 
-const palettes = [[10, 30, 50, 70, 90]];
+const shapeRules = ["uniform", "pairs", "random"];
+const shapes = [0, 1, 2, 3, 4, 5, 6, 7];
+const shapeRule = shapeRules[Math.floor(shapeRules.length * fxrand())];
+let pickedShapes = [0, 0];
+
+let shapePool = shapes;
+pickedShapes.forEach((pick, index) => {
+  pickedShapes[index] = shapePool.splice(
+    Math.floor(fxrand() * shapePool.length),
+    1
+  )[0];
+});
+
+const colorRules = ["duo", "quad", "random"];
+const colorRule = colorRules[Math.floor(colorRules.length * fxrand())];
+const palette = colors[Math.floor(colors.length * fxrand())];
+let colorPool = [];
+palette.forEach((color, index) => {
+  colorPool[index] = color.hsb;
+});
+
+console.log("COLOR POOL: ", colorPool);
+
+let pickedColors = [0, 0, 0, 0];
+pickedColors.forEach((color, index) => {
+  pickedColors[index] = colorPool.splice(
+    Math.floor(fxrand() * colorPool.length),
+    1
+  )[0];
+});
+
+console.log("COLOR PICK: ", pickedColors);
 
 function setup() {
   pixelDensity(1);
@@ -47,12 +78,15 @@ function setup() {
   for (let x = 0; x < cols; x++) {
     var column = [];
     for (let y = 0; y < rows; y++) {
+      let chosenShape = shapeBuilder(x, y);
+      let chosenColors = colorBuilder(x, y);
+      console.log("COLOR:", chosenColors);
       column.push({
         x: margin + (x > 0 ? x * gutterH : 0) + x * goldenCell,
         y: margin + (y > 0 ? y * gutterV : 0) + y * goldenCell,
-        shape: floor(random(0, 8)),
+        shape: chosenShape,
         pattern: 1,
-        palette: 0,
+        palette: chosenColors,
       });
     }
     coords.push(column);
@@ -112,14 +146,10 @@ function draw() {
   */
   noLoop();
   // saveCanvas(c, `The D - Super Ellipse`, "png");
-  /*   console.table({
-    "Occurence:": occurence(),
-    "Centered:": centered,
-    "Gravity:": gravity(),
-    "Mapped Shape:": mappedShape,
-    "Mapped Color:": mappedCol,
-    "Palette:": paletteNames[paletteNum] || paletteNum,
-  }); */
+  console.table({
+    "Shape rule": shapeRule,
+    "Color rule": colorRule,
+  });
 }
 
 class BaseElement {
@@ -128,23 +158,24 @@ class BaseElement {
     this.realY = scaledY;
     this.shape = shape;
     this.pattern = pattern;
-    this.palette = palettes[palette];
+    this.palette = palette;
 
     baseShape(this.shape, this.pattern, this.palette);
   }
 }
 
 const baseShape = (shape, pattern, palette) => {
+  console.log("BASE PALETTE: ", palette);
   switch (shape) {
     case 1:
       push();
       translate(0, -goldenCell / 2);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(0, 0);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
       break;
 
@@ -152,26 +183,26 @@ const baseShape = (shape, pattern, palette) => {
       push();
       translate(0, 0);
       rotate(180);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(0, goldenCell / 2);
       rotate(180);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
       break;
 
     case 3:
       push();
       translate(0, -goldenCell / 2);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(0, goldenCell / 2);
       rotate(180);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
 
       break;
@@ -180,25 +211,25 @@ const baseShape = (shape, pattern, palette) => {
       push();
       translate(0, 0);
       rotate(180);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(0, 0);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
       break;
 
     case 5:
       push();
       rotate(90);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(goldenCell / 2, 0);
       rotate(90);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
 
       break;
@@ -207,24 +238,24 @@ const baseShape = (shape, pattern, palette) => {
       push();
       translate(-goldenCell / 2, 0);
       rotate(-90);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       rotate(-90);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
       break;
 
     case 7:
       push();
       rotate(90);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       rotate(-90);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
 
       break;
@@ -233,13 +264,13 @@ const baseShape = (shape, pattern, palette) => {
       push();
       translate(-goldenCell / 2, 0);
       rotate(-90);
-      patternChoser(pattern, (c = { one: palette[4] }));
+      patternChoser(pattern, (c = { one: palette[0] }));
       pop();
 
       push();
       translate(goldenCell / 2, 0);
       rotate(90);
-      patternChoser(pattern, (c = { one: palette[2] }));
+      patternChoser(pattern, (c = { one: palette[1] }));
       pop();
       break;
   }
@@ -318,9 +349,8 @@ const patternChoser = (pattern, c) => {
 
 const pattern1 = (size, start, end, col) => {
   fill(col.one);
-  arc(0, 0, size, size, start, end);
 
-  /*   let n = 2.5;
+  let n = 2.5;
   let a = size / 2;
   let b = size / 2;
 
@@ -331,7 +361,7 @@ const pattern1 = (size, start, end, col) => {
     let y = pow(abs(sin(t)), 2 / n) * b * sgn(sin(t));
     vertex(x, y);
   }
-  endShape(CLOSE); */
+  endShape(CLOSE);
 };
 
 function sgn(w) {
@@ -341,5 +371,36 @@ function sgn(w) {
     return 0;
   } else {
     return 1;
+  }
+}
+
+function shapeBuilder(x, y) {
+  if (shapeRule === "uniform") {
+    return pickedShapes[0];
+  } else if (shapeRule === "pairs") {
+    if ((x % 2 == 0 && y % 2 == 0) || (x % 2 != 0 && y % 2 != 0)) {
+      return pickedShapes[0];
+    } else {
+      return pickedShapes[1];
+    }
+  } else {
+    return floor(fxrand() * shapes.length);
+  }
+}
+
+function colorBuilder(x, y) {
+  if (colorRule === "duo") {
+    return [pickedColors[0], pickedColors[1]];
+  } else if (colorRule === "quad") {
+    if ((x % 2 == 0 && y % 2 == 0) || (x % 2 != 0 && y % 2 != 0)) {
+      return [pickedColors[0], pickedColors[1]];
+    } else {
+      return [pickedColors[2], pickedColors[3]];
+    }
+  } else {
+    return [
+      pickedColors[floor(fxrand() * pickedColors.length)],
+      pickedColors[floor(fxrand() * pickedColors.length)],
+    ];
   }
 }
