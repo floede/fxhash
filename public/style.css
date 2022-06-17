@@ -18,5 +18,8 @@ body {
 
 canvas {
   display: block;
+  --w: min(100vh, 100vw);
   margin: auto;
+  height: var(--w) !important;
+  width: var(--w) !important;
 }
