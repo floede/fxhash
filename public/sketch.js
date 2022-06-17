@@ -1,5 +1,5 @@
 // Canvas related variables
-const referenceSize = 2000;
+const referenceSize = 1080;
 const hasMaxSize = true; // if true, then the canvas cannot be larger than the reference size
 const isCentered = false; // if true the canvas will be vertically and horizontally centered
 
@@ -114,11 +114,11 @@ function draw() {
 
   for (let x = 0; x < coords.length; x++) {
     for (let y = 0; y < coords[x].length; y++) {
-      let scaledX = margin + (x > 0 ? x * gutterH : 0) + x * goldenCell;
-      let scaledY = margin + (y > 0 ? y * gutterV : 0) + y * goldenCell;
+      let scaledX = ceil(margin + (x > 0 ? x * gutterH : 0) + x * goldenCell);
+      let scaledY = ceil(margin + (y > 0 ? y * gutterV : 0) + y * goldenCell);
 
       push();
-      translate(scaledX + goldenCell / 2, scaledY + goldenCell / 2);
+      translate(ceil(scaledX + goldenCell / 2), ceil(scaledY + goldenCell / 2));
       elements.push(
         new BaseElement(
           scaledX,
@@ -184,7 +184,7 @@ const baseShape = (shape, pattern, palette) => {
     rectMode(CENTER);
     rect(0, 0, goldenCell, goldenCell);
   }
-  const offset = goldenCell / 2 - (border ? spaceUnit / 4 : 0);
+  const offset = ceil(goldenCell / 2 - (border ? spaceUnit / 4 : 0));
   switch (shape) {
     case 1:
       push();
@@ -321,7 +321,7 @@ window.$fxhashFeatures = {
 
 function setDimensions() {
   // This is how we constrain the canvas to the smallest dimension of the window
-  h = w = min(windowWidth, windowHeight);
+  h = w = referenceSize; // min(windowWidth, windowHeight);
 
   if (hasMaxSize) {
     w = min(referenceSize, w);
@@ -339,7 +339,7 @@ function goldenCellSize(n) {
   if (count < goldenFactor) {
     return goldenCellSize(size);
   }
-  return size;
+  return ceil(size);
 }
 
 const patternChoser = (pattern, col) => {
@@ -427,7 +427,7 @@ const patternChoser = (pattern, col) => {
     default:
       push();
       noStroke();
-      fill(10);
+      fill(bg);
       beginShape();
       for (let t = 0; t <= 180; t += 5) {
         let x = pow(abs(cos(t)), 2 / n) * a * sgn(cos(t));
