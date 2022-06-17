@@ -79,10 +79,6 @@ function setup() {
   cols = int(height / goldenCell);
 
   spaceUnit = ceil(tempSpace / (4 + (cols - 1)));
-  gutterH = spaceUnit;
-  gutterV = spaceUnit;
-
-  margin = 2 * spaceUnit;
 
   bg = border ? (0, 0, 95) : (0, 0, 10);
 
@@ -94,8 +90,8 @@ function setup() {
       let chosenColors = colorBuilder(x, y);
       let chosenPatterns = patternBuilder(x, y);
       column.push({
-        x: margin + (x > 0 ? x * gutterH : 0) + x * goldenCell,
-        y: margin + (y > 0 ? y * gutterV : 0) + y * goldenCell,
+        //x: margin + (x > 0 ? x * gutterH : 0) + x * goldenCell,
+        //y: margin + (y > 0 ? y * gutterV : 0) + y * goldenCell,
         shape: chosenShape,
         pattern: chosenPatterns,
         palette: chosenColors,
@@ -110,10 +106,16 @@ function draw() {
   // translate(-width / 2, -height / 2);
   background(bg);
   noStroke();
+
+  gutterH = spaceUnit;
+  gutterV = spaceUnit;
+
+  margin = 2 * spaceUnit;
+
   for (let x = 0; x < coords.length; x++) {
     for (let y = 0; y < coords[x].length; y++) {
-      let scaledX = coords[x][y].x;
-      let scaledY = coords[x][y].y;
+      let scaledX = margin + (x > 0 ? x * gutterH : 0) + x * goldenCell;
+      let scaledY = margin + (y > 0 ? y * gutterV : 0) + y * goldenCell;
 
       push();
       translate(scaledX + goldenCell / 2, scaledY + goldenCell / 2);
@@ -161,6 +163,7 @@ function draw() {
     "Color rule": colorRule,
     "Pattern rule": patternRule,
   });
+  fxpreview();
 }
 
 class BaseElement {
