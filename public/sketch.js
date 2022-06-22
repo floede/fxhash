@@ -48,7 +48,7 @@ pickedColors.forEach((color, index) => {
 });
 
 const patternRules = ["uniform", "double", "pair", "random"];
-const patternRule = patternRules[3]; //[Math.floor(patternRules.length * fxrand())];
+const patternRule = patternRules[Math.floor(patternRules.length * fxrand())];
 const patterns = [1, 2, 3, 4];
 const patternPool = shuffle(patterns);
 
