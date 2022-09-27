@@ -1,13 +1,12 @@
-const path = require("path")
-const webpack = require("webpack")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "bundle.js",
-    clean: true
+    clean: true,
   },
   module: {
     rules: [
@@ -21,7 +20,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       inject: "body",
-      publicPath: "./"
-    })
-  ]
-}
+      publicPath: "./",
+    }),
+  ],
+};

@@ -1,4 +1,5 @@
-const config = require("./webpack.config")
+const config = require("./webpack.config");
+const StdioWebpackPlugin = require("@altesc/stdio/webpack-plugin");
 
 module.exports = {
   ...config,
@@ -9,7 +10,7 @@ module.exports = {
     // https://webpack.js.org/concepts/hot-module-replacement/
     hot: false,
     port: 8080,
-    open: true,
+    open: "/stdio",
     client: {
       overlay: {
         errors: true,
@@ -17,4 +18,5 @@ module.exports = {
       },
     },
   },
-}
+  plugins: [...config.plugins, new StdioWebpackPlugin()],
+};

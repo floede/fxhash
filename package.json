@@ -1,15 +1,17 @@
 {
-  "name": "fxhash-boilerplate-webpack",
-  "version": "1.0.0",
-  "description": "a boilerplate to create a generative token on fxhash",
-  "main": "index.js",
-  "author": "fxhash",
+  "name": "fxhash-stdio-boilerplate",
+  "private": true,
+  "description": "An fxhash boilerplate with fx(stdio) and p5",
+  "author": "alt-escapism",
   "license": "MIT",
   "scripts": {
     "build": "webpack --config ./config/webpack.config.prod.js",
     "start": "webpack serve --config ./config/webpack.config.dev.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@altesc/stdio": "^0.1.4",
+    "p5": "^1.4.2"
+  },
   "devDependencies": {
     "adm-zip": "^0.5.9",
     "copy-webpack-plugin": "^9.0.1",
