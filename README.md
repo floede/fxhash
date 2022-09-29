@@ -9,7 +9,7 @@ Ensure that you have [nodejs](https://nodejs.org/) installed.
 Clone the repository:
 
 ```sh
-git clone https://github.com/alt-escapism/stdio.git your_folder && cd your_folder
+git clone https://github.com/alt-escapism/fxhash-stdio-boilerplate.git your_folder && cd your_folder
 ```
 
 Install:
