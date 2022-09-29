@@ -34,7 +34,7 @@ and use the randomization functions from `@altesc/stdio`, instead of the ones
 from p5. If you want a random variable to appear in the fx(stdio) UI, simply add
 a unique name as the first argument to the function.
 
-See the [fx(stdio) documentation](https://github.com/alt-escapism/stdio/blob/main/README.md) for more information.
+See the [fx(stdio) documentation](https://altesc.art/stdio) for more information.
 
 ## Publishing to fx(hash)
 
