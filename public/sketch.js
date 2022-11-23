@@ -44,7 +44,9 @@ function setup(params) {
   palettePick = Math.floor(colors.length * fxrand());
   bgColor = colors[palettePick][0].hsb;
   background(bgColor);
-  noStroke();
+  //noStroke();
+  strokeWeight((0.5 * border) / noOfHex);
+  stroke(bgColor);
   for (let j = 0; j < 1 + h / HexSize; j++) {
     let row = [];
     for (let index = 0; index <= noOfHex; index++) {
@@ -74,17 +76,18 @@ function draw(params) {
       }
       push();
       translate(ceil(x), ceil(y));
+      let rot = map(y, 0, h, 0, 0.25);
       rotate(30 * (PI / 180));
       drawHalfHex(0, 0, HexSide, pickColorScheme(), x);
-      rotate(PI);
+      rotate(PI + rot);
       drawHalfHex(0, 0, HexSide, pickColorScheme(), x);
-      rotate(PI);
+      rotate(PI + rot);
       drawHalfHex(0, 0, HexSide * 0.75, pickColorScheme(), x);
-      rotate(PI);
+      rotate(PI + rot);
       drawHalfHex(0, 0, HexSide * 0.75, pickColorScheme(), x);
-      rotate(PI);
+      rotate(PI + rot);
       drawHalfHex(0, 0, HexSide * 0.5, pickColorScheme(), x);
-      rotate(PI);
+      rotate(PI + rot);
       drawHalfHex(0, 0, HexSide * 0.5, pickColorScheme(), x);
       pop();
     }
@@ -124,7 +127,8 @@ function drawHalfHex(x, y, len, col, realX) {
     let hue = map(realX, 0, w, 0, 360);
     fill(hue, 40 + len - 20 * fxrand(), 100 - 20 * fxrand());
   } else {
-    fill(col);
+    let bright = map(realX, 0, w, 0, 100);
+    fill(col[0], col[1], col[2] + bright);
   }
   beginShape();
   vertex(x - gs, y - sqrt(3) * gs);
